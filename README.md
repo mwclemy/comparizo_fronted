@@ -14,7 +14,7 @@ Comparizo is a yelp like app which helps people discover new campground places. 
 ![page3](assets/images/Page_3.png)
 
 ### Add comment to a campground
-![page1](assets/images/page4.png)
+![page4](assets/images/page4.png)
 
 ## User stories
 
@@ -44,6 +44,12 @@ Comparizo is a yelp like app which helps people discover new campground places. 
 
 - Allow users to rate a campground
 - Sow campground address on a map
+
+## ERD
+
+![page4](assets/images/erd.png)
+
+
 
 
 
