@@ -5,11 +5,105 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <title>Comparizo</title>
 </head>
 
 <body>
 
+    <main>
+        <nav class="nav-links hide">
+            <ul>
+                <li id="signup-link">Sign up</li>
+                <li id="login-link">Login</li>
+                <li id="logout-link" class="hide">Logout</li>
+            </ul>
+        </nav>
+        <div class="homeScreen">
+            <img class="mySlides"
+                src="https://images.unsplash.com/photo-1476041800959-2f6bb412c8ce?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1350&q=80"
+                alt="">
+            <!-- <img class="mySlides"
+                src="https://images.unsplash.com/photo-1534880606858-29b0e8a24e8d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NXx8Y2FtcGdyb3VuZHxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+                alt="">
+            <img class="mySlides"
+                src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2250&q=80"
+                alt=""> -->
+            <div class="view-campground">
+                <h2>Welcome to comparizo</h2>
+                <button class="btn">View all campgrounds</button>
+            </div>
+        </div>
+        <div class="signUpScreen hide">
+            <h2>Create account</h2>
+            <form class="signup-form">
+                <label for="signup-name">Name</label>
+                <input type="text" name="name" id="signup-name">
+
+                <label for="signup-email">Email</label>
+                <input type="text" name="email" id="signup-email">
+
+                <label for="signup-password">Password</label>
+                <input type="password" name="password" id="signup-password">
+
+                <input type="submit" value="Sign Up!">
+            </form>
+        </div>
+        <div class="loginScreen hide">
+            <h2>Login into your account</h2>
+            <form class="login-form">
+                <label for="login-email">Email</label>
+                <input type="text" name="email" id="login-email">
+
+                <label for="login-password">Password</label>
+                <input type="password" name="password" id="login-password">
+
+                <input type="submit" value="Log In!">
+            </form>
+        </div>
+
+        <div class="allCampgroundScreen hide">
+            <div class="allCampgroundHeader">
+                <h2>Welcome to Comparizo</h1>
+                    <h3>View campgrounds from all over the world.
+                </h2>
+                <button class="createCampgroundBtn">Create new campground</button>
+            </div>
+            <div class="message hide">
+                <p>You need to login to proceed.</p>
+            </div>
+            <div class="showCampgroundArea">
+                <h2>All campgrounds</h2>
+                <div class="allCampground"></div>
+            </div>
+            <div class="createCampgroundArea">
+                <h2>Create campground</h2>
+                <form class="create-campground-form">
+                    <div>
+                        <label for="campgroundName">Name</label>
+                        <input type="text" name="campgroundName" id="campgroundName">
+                    </div>
+                    <div>
+                        <label for="campgroundPrice">Price</label>
+                        <input type="number" name="campgroundPrice" id="campgroundPrice">
+                    </div>
+                    <div>
+                        <label for="campgroundUrl">Image URL</label>
+                        <input type="text" name="campgroundUrl" id="campgroundUrl">
+                    </div>
+                    <div>
+                        <label for="campgroundDescription">Description</label>
+                        <textarea id="campgroundDescription" name="campgroundDescription" rows="4" cols="50"></textarea>
+                    </div>
+                    <div>
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js "></script>
+    <script async defer src="./main.js"></script>
 </body>
 
 </html>

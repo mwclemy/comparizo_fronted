@@ -1,26 +1,156 @@
-const express = require('express')
-const app = express()
+let myIndex = 0;
+const viewCampgroundBtn = document.querySelector('.btn')
+const homeScreen = document.querySelector('.homeScreen');
+const signUpScreen = document.querySelector('.signUpScreen')
+const loginScreen = document.querySelector('.loginScreen')
+const allCampgroundScreen = document.querySelector('.allCampgroundScreen')
+const allCampgroundArea = document.querySelector('.allCampground')
+const createCampgroundBtn = document.querySelector('.createCampgroundBtn')
+const showCampgroundArea = document.querySelector('.showCampgroundArea')
+const createCampgroundArea = document.querySelector('.createCampgroundArea')
+const signUpLink = document.querySelector('#signup-link')
+const loginLink = document.querySelector('#login-link')
+const logoutLink = document.querySelector('#logout-link')
+const navLinks = document.querySelector('.nav-links')
+const signUpForm = document.querySelector('.signup-form')
+const loginForm = document.querySelector('.login-form')
 
-const routesReport = require('rowdy-logger').begin(app)
+const API_URL = 'http://localhost:3001'
+const carousel = () => {
+    const x = document.getElementsByClassName("mySlides");
+    for (let i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+    myIndex++;
+    if (myIndex > x.length) { myIndex = 1 }
+    x[myIndex - 1].style.display = "block";
+    setTimeout(carousel, 3000); // Change image every 2 seconds
+}
 
-const path = require('path')
+const hideElements = (...elements) => {
+    for (let element of elements) {
+        element.classList.add('hide');
+    }
+}
 
-app.get('/', (req, res) => {
-    const filepath = path.join(__dirname, 'index.html')
-    res.sendFile(filepath)
+const showElements = (...elements) => {
+    for (let element of elements) {
+        element.classList.remove('hide');
+    }
+}
+
+const removeActive = (...elements) => {
+    for (let element of elements) {
+        element.classList.remove('active');
+    }
+}
+
+const addActive = (...elements) => {
+    for (let element of elements) {
+        element.classList.add('active');
+    }
+}
+
+const isLoggedIn = () => {
+    return localStorage.getItem('userId') !== null
+}
+
+// window.addEventListener("load", carousel);
+
+viewCampgroundBtn.addEventListener('click', async () => {
+    // Get all campgrounds
+    const response = await axios.get(`${API_URL}/users/1/campgrounds`)
+    const allCampgrounds = response.data.campgrounds
+    for (let campground of allCampgrounds) {
+        const campgroundDiv = document.createElement('div')
+        campgroundDiv.classList.add('campground')
+        const image = document.createElement('img')
+        image.src = campground.imageUrl
+        image.alt = campground.name
+        const name = document.createElement('h3')
+        name.innerText = campground.name
+        const button = document.createElement('button')
+        button.innerText = 'More info'
+        campgroundDiv.append(image, name, button)
+        allCampgroundArea.append(campgroundDiv)
+    }
+    showElements(allCampgroundScreen, navLinks)
+    hideElements(homeScreen)
 })
 
-app.get('/main.js', (req, res) => {
-    const filepath = path.join(__dirname, 'main.js')
-    res.sendFile(filepath)
+signUpLink.addEventListener('click', () => {
+    hideElements(loginScreen, homeScreen, allCampgroundScreen)
+    showElements(signUpScreen)
+    addActive(signUpLink)
+    removeActive(loginLink)
 })
 
-app.get('/style.css', (req, res) => {
-    const filepath = path.join(__dirname, 'style.css')
-    res.type('css').sendFile(filepath)
+loginLink.addEventListener('click', () => {
+    hideElements(signUpScreen, homeScreen, allCampgroundScreen)
+    showElements(loginScreen)
+    addActive(loginLink)
+    removeActive(signUpLink)
 })
 
-const port = process.env.PORT || 3000
-app.listen(port, () => {
-    routesReport.print()
+logoutLink.addEventListener('click', () => {
+    localStorage.removeItem('userId')
+    hideElements(logoutLink, allCampgroundScreen)
+    showElements(signUpLink, loginLink, homeScreen)
+})
+
+signUpForm.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const name = event.target.name.value
+    const email = event.target.email.value
+    const password = event.target.password.value
+
+    try {
+        const user = await axios.post('http://localhost:3001/users', {
+            name: name,
+            email: email,
+            password: password
+        })
+
+        const userId = user.data.user.id
+        localStorage.setItem('userId', userId)
+        showElements(allCampgroundScreen, logoutLink)
+        hideElements(signUpLink, loginLink, signUpScreen)
+    } catch (error) {
+        alert(error.message)
+    }
+
+})
+
+
+loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const email = event.target.email.value
+    const password = event.target.password.value
+
+    try {
+        const user = await axios.post('http://localhost:3001/users/login', {
+            email: email,
+            password: password
+        })
+
+        const userId = user.data.user.id
+        localStorage.setItem('userId', userId)
+        showElements(allCampgroundScreen, logoutLink)
+        hideElements(signUpLink, loginLink, loginScreen)
+    } catch (error) {
+        alert(error.message)
+    }
+
+})
+
+createCampgroundBtn.addEventListener('click', () => {
+
+    if (isLoggedIn) {
+        // const userId = localStorage.getItem('userId')
+        hideElements(showCampgroundArea)
+        showElements(createCampgroundArea)
+    }
+    else {
+
+    }
 })

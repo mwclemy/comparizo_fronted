@@ -1,0 +1,107 @@
+body {
+    margin: 0;
+    padding:0;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333333;
+  }
+  
+  li {
+    float: right;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+
+  }
+  li:hover, li.active {
+    background-color: #111111;
+    cursor: pointer;
+  }
+.homeScreen {
+    width:100%;
+    position: relative;
+}
+
+.view-campground {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: white;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.view-campground .btn {
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transform: translate(-50%, -50%);
+    background-color: #2fb553;
+}
+
+.mySlides {
+    width: 100vw;
+    height: 100vh;
+    /* display: none; */
+}
+
+.allCampgroundScreen {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    padding: 5px;
+}
+.allCampgroundHeader {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+}
+.allCampground {
+    display: flex;
+}
+
+.campground {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+}
+
+.campground img {
+    width: 200px;
+    height: 200px;
+}
+
+.createCampgroundBtn {
+    width:200px
+}
+
+.hide {
+    display: none
+}
+
+.loginScreen, .signUpScreen {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+}
+
+.message {
+    border: 1px solid #ccc;
+    background-color: #df9d9db4;
+    margin: 5px;
+    padding: 5px;
+}
