@@ -117,7 +117,7 @@ signUpForm.addEventListener('submit', async (event) => {
     const password = event.target.password.value
 
     try {
-        const user = await axios.post('http://localhost:3001/users', {
+        const user = await axios.post(`${API_URL}/users`, {
             name: name,
             email: email,
             password: password
@@ -140,7 +140,7 @@ loginForm.addEventListener('submit', async (event) => {
     const password = event.target.password.value
 
     try {
-        const user = await axios.post('http://localhost:3001/users/login', {
+        const user = await axios.post(`${API_URL}/users/login`, {
             email: email,
             password: password
         })
@@ -164,7 +164,7 @@ createCampgroundForm.addEventListener('submit', async (event) => {
     const description = event.target.campgroundDescription.value
 
     const userId = localStorage.getItem('userId')
-    const response = await axios.post(`http://localhost:3001/users/${userId}/campgrounds`, {
+    const response = await axios.post(`${API_URL}/users/${userId}/campgrounds`, {
         name: name,
         price: price,
         imageUrl: imageUrl,
