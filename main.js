@@ -81,7 +81,7 @@ const addCampground = (campground) => {
 
 viewCampgroundBtn.addEventListener('click', async () => {
     // Get all campgrounds
-    const response = await axios.get(`${API_URL}/users/1/campgrounds`)
+    const response = await axios.get(`${API_URL}/campgrounds`)
     const allCampgrounds = response.data.campgrounds
     for (let campground of allCampgrounds) {
         addCampground(campground)
