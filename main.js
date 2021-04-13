@@ -14,7 +14,8 @@ const logoutLink = document.querySelector('#logout-link')
 const navLinks = document.querySelector('.nav-links')
 const signUpForm = document.querySelector('.signup-form')
 const loginForm = document.querySelector('.login-form')
-
+const createCampgroundForm = document.querySelector('.create-campground-form')
+const message = document.querySelector('.message')
 const API_URL = 'http://localhost:3001'
 const carousel = () => {
     const x = document.getElementsByClassName("mySlides");
@@ -55,6 +56,20 @@ const isLoggedIn = () => {
     return localStorage.getItem('userId') !== null
 }
 
+const addCampground = (campground) => {
+    const campgroundDiv = document.createElement('div')
+    campgroundDiv.classList.add('campground')
+    const image = document.createElement('img')
+    image.src = campground.imageUrl
+    image.alt = campground.name
+    const name = document.createElement('h3')
+    name.innerText = campground.name
+    const button = document.createElement('button')
+    button.innerText = 'More info'
+    campgroundDiv.append(image, name, button)
+    allCampgroundArea.append(campgroundDiv)
+}
+
 // window.addEventListener("load", carousel);
 
 viewCampgroundBtn.addEventListener('click', async () => {
@@ -62,17 +77,7 @@ viewCampgroundBtn.addEventListener('click', async () => {
     const response = await axios.get(`${API_URL}/users/1/campgrounds`)
     const allCampgrounds = response.data.campgrounds
     for (let campground of allCampgrounds) {
-        const campgroundDiv = document.createElement('div')
-        campgroundDiv.classList.add('campground')
-        const image = document.createElement('img')
-        image.src = campground.imageUrl
-        image.alt = campground.name
-        const name = document.createElement('h3')
-        name.innerText = campground.name
-        const button = document.createElement('button')
-        button.innerText = 'More info'
-        campgroundDiv.append(image, name, button)
-        allCampgroundArea.append(campgroundDiv)
+        addCampground(campground)
     }
     showElements(allCampgroundScreen, navLinks)
     hideElements(homeScreen)
@@ -95,7 +100,7 @@ loginLink.addEventListener('click', () => {
 logoutLink.addEventListener('click', () => {
     localStorage.removeItem('userId')
     hideElements(logoutLink, allCampgroundScreen)
-    showElements(signUpLink, loginLink, homeScreen)
+    showElements(signUpLink, loginLink, homeScreen, message)
 })
 
 signUpForm.addEventListener('submit', async (event) => {
@@ -114,7 +119,7 @@ signUpForm.addEventListener('submit', async (event) => {
         const userId = user.data.user.id
         localStorage.setItem('userId', userId)
         showElements(allCampgroundScreen, logoutLink)
-        hideElements(signUpLink, loginLink, signUpScreen)
+        hideElements(signUpLink, loginLink, signUpScreen, message)
     } catch (error) {
         alert(error.message)
     }
@@ -143,14 +148,36 @@ loginForm.addEventListener('submit', async (event) => {
 
 })
 
-createCampgroundBtn.addEventListener('click', () => {
+createCampgroundForm.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    console.log(event.target);
+    const name = event.target.campgroundName.value
+    const price = event.target.campgroundPrice.value
+    const imageUrl = event.target.campgroundUrl.value
+    const description = event.target.campgroundDescription.value
 
-    if (isLoggedIn) {
+    const userId = localStorage.getItem('userId')
+    const response = await axios.post(`http://localhost:3001/users/${userId}/campgrounds`, {
+        name: name,
+        price: price,
+        imageUrl: imageUrl,
+        description: description
+    })
+
+    showElements(allCampgroundScreen, showCampgroundArea)
+    hideElements(createCampgroundArea)
+    addCampground(response.data.campground)
+})
+
+createCampgroundBtn.addEventListener('click', () => {
+    if (isLoggedIn()) {
         // const userId = localStorage.getItem('userId')
         hideElements(showCampgroundArea)
         showElements(createCampgroundArea)
     }
     else {
-
+        showElements(message, loginScreen)
+        hideElements(allCampgroundScreen)
+        addActive(loginLink)
     }
 })
