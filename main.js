@@ -66,6 +66,13 @@ const addCampground = (campground) => {
     name.innerText = campground.name
     const button = document.createElement('button')
     button.innerText = 'More info'
+    button.setAttribute('data-campground-id', campground.id)
+    button.classList.add('moreInfo')
+
+    button.addEventListener('click', (event) => {
+        hideElements(allCampgroundScreen)
+    })
+
     campgroundDiv.append(image, name, button)
     allCampgroundArea.append(campgroundDiv)
 }

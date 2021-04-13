@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const routesReport = require('rowdy-logger').begin(app)
 const path = require('path')
+const replaceInFile = require('replace-in-file')
 app.use(require('cors')())
 
 app.get('/', (req, res) => {
