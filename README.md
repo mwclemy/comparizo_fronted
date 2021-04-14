@@ -31,7 +31,7 @@ Comparizo is a yelp like app which helps people discover new campground places. 
 | POST   | /campgrounds      | Add a new campground       |
 | PUT   | /campgrounds/:id      | Edit a campground       |
 | DELETE   | /campgrounds/:id      | Delete a campground       |
-
+| POST   │ /users | Create a new User|
 ## MVP goals
 
 - Sign up new users
@@ -42,8 +42,8 @@ Comparizo is a yelp like app which helps people discover new campground places. 
 
 ## Strech goals
 
-- Allow users to rate a campground
-- Sow campground address on a map
+- Edit/Delete comment by a user
+- Edit/Delete campground by a user
 
 ## ERD
 
