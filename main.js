@@ -97,6 +97,7 @@ const addCampground = (campground) => {
     button.classList.add('moreInfo')
 
     button.addEventListener('click', async (event) => {
+        event.preventDefault()
         hideElements(allCampgroundScreen)
         removeAllChildren(campgroundInfo)
 
@@ -275,7 +276,6 @@ loginForm.addEventListener('submit', async (event) => {
 
 createCampgroundForm.addEventListener('submit', async (event) => {
     event.preventDefault()
-    console.log(event.target);
     const name = event.target.campgroundName.value
     const price = event.target.campgroundPrice.value
     const imageUrl = event.target.campgroundUrl.value
