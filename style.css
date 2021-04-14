@@ -85,7 +85,7 @@ ul {
     height: 200px;
 }
 
-.createCampgroundBtn {
+.createCampgroundBtn, .addCommentBtn {
     width:200px
 }
 
@@ -105,3 +105,28 @@ ul {
     margin: 5px;
     padding: 5px;
 }
+
+.campgroundInfo {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    padding: 5px;
+}
+
+.campgroundInfo img {
+    min-width: 400px;
+    min-height: 400px;
+}
+
+.commentArea {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    padding: 5px;
+
+}
+.addCommentBtn {
+    align-self: flex-end;
+}
+
+

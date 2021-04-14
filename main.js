@@ -8,6 +8,7 @@ const allCampgroundArea = document.querySelector('.allCampground')
 const createCampgroundBtn = document.querySelector('.createCampgroundBtn')
 const showCampgroundArea = document.querySelector('.showCampgroundArea')
 const createCampgroundArea = document.querySelector('.createCampgroundArea')
+const campgroundInfo = document.querySelector('.campgroundInfo')
 const signUpLink = document.querySelector('#signup-link')
 const loginLink = document.querySelector('#login-link')
 const logoutLink = document.querySelector('#logout-link')
@@ -17,6 +18,7 @@ const loginForm = document.querySelector('.login-form')
 const createCampgroundForm = document.querySelector('.create-campground-form')
 const message = document.querySelector('.message')
 const API_URL = 'http://localhost:3001'
+
 const carousel = () => {
     const x = document.getElementsByClassName("mySlides");
     for (let i = 0; i < x.length; i++) {
@@ -56,6 +58,31 @@ const isLoggedIn = () => {
     return localStorage.getItem('userId') !== null
 }
 
+const getUser = async () => {
+    const userId = localStorage.getItem('userId')
+    const response = await axios.get(`${API_URL}/users/${userId}`)
+    return response.data.user
+}
+
+const removeAllChildren = (parent) => {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+const createComment = (comment) => {
+    const commentDiv = document.createElement('div')
+    commentDiv.classList.add('comment')
+    const userComment = document.createElement('h3')
+    userComment.innerText = `${comment.submittedBy}`
+    const commentText = document.createElement('p')
+    commentText.innerText = comment.text
+    commentDiv.append(userComment)
+    commentDiv.append(commentText)
+
+    return commentDiv
+}
+
 const addCampground = (campground) => {
     const campgroundDiv = document.createElement('div')
     campgroundDiv.classList.add('campground')
@@ -69,8 +96,89 @@ const addCampground = (campground) => {
     button.setAttribute('data-campground-id', campground.id)
     button.classList.add('moreInfo')
 
-    button.addEventListener('click', (event) => {
+    button.addEventListener('click', async (event) => {
         hideElements(allCampgroundScreen)
+        removeAllChildren(campgroundInfo)
+
+        if (isLoggedIn()) {
+            const campgroundId = event.target.getAttribute('data-campground-id')
+            const response = await axios.get(`${API_URL}/campgrounds/${campgroundId}/comments`)
+            const comments = response.data.comments
+
+            const campgroundName = document.createElement('h2')
+            campgroundName.innerText = campground.name
+            const description = document.createElement('p')
+            description.innerText = campground.description
+            const submittedBy = document.createElement('p')
+            submittedBy.innerHTML = `-Submitted by <b>${campground.user.name}</b>`
+
+            const commentArea = document.createElement('div')
+            commentArea.classList.add('commentArea')
+
+            const addCommentBtn = document.createElement('button')
+            addCommentBtn.innerText = 'Add Comment'
+            addCommentBtn.classList.add('addCommentBtn')
+
+            const commentForm = document.createElement('form')
+            const divComment = document.createElement('div')
+            const labelComment = document.createElement('label')
+            labelComment.setAttribute("for", "commentText")
+            labelComment.innerText = "Type your comment"
+            const inputComment = document.createElement('input')
+            inputComment.setAttribute("type", "text")
+            inputComment.setAttribute("name", "commentText")
+            inputComment.setAttribute("id", "commentText")
+            const submitComment = document.createElement('input')
+            submitComment.setAttribute("type", "submit")
+
+            divComment.append(labelComment)
+            divComment.append(inputComment)
+            divComment.append(submitComment)
+
+            commentForm.append(divComment)
+            commentForm.addEventListener('submit', async (event) => {
+                event.preventDefault()
+                const commentText = event.target.commentText.value
+                const currentUser = await getUser()
+                const response = await axios.post(`${API_URL}/comments`, {
+                    text: commentText,
+                    userId: currentUser.id,
+                    campgroundId: campgroundId,
+                    submittedBy: currentUser.name
+                })
+
+                const newComment = createComment(response.data.comment)
+                commentArea.append(newComment)
+                hideElements(commentForm)
+
+            })
+            hideElements(commentForm)
+
+            commentArea.append(addCommentBtn)
+            commentArea.append(commentForm)
+
+
+            addCommentBtn.addEventListener('click', () => {
+                showElements(commentForm)
+            })
+
+            for (let comment of comments) {
+                const newCommentDiv = createComment(comment)
+                commentArea.append(newCommentDiv)
+            }
+
+            campgroundInfo.append(image)
+            campgroundInfo.append(campgroundName)
+            campgroundInfo.append(description)
+            campgroundInfo.append(submittedBy)
+            campgroundInfo.append(commentArea)
+        }
+        else {
+            showElements(message, loginScreen)
+            hideElements(allCampgroundScreen)
+            addActive(loginLink)
+        }
+
     })
 
     campgroundDiv.append(image, name, button)
@@ -87,18 +195,27 @@ viewCampgroundBtn.addEventListener('click', async () => {
         addCampground(campground)
     }
     showElements(allCampgroundScreen, navLinks)
+    if (isLoggedIn()) {
+        hideElements(loginLink, signUpLink, message)
+        showElements(logoutLink)
+    }
+    else {
+        hideElements(logoutLink)
+        showElements(loginLink, signUpLink)
+    }
     hideElements(homeScreen)
 })
 
 signUpLink.addEventListener('click', () => {
-    hideElements(loginScreen, homeScreen, allCampgroundScreen)
+    hideElements(loginScreen, homeScreen, allCampgroundScreen, message)
     showElements(signUpScreen)
     addActive(signUpLink)
     removeActive(loginLink)
 })
 
 loginLink.addEventListener('click', () => {
-    hideElements(signUpScreen, homeScreen, allCampgroundScreen)
+    hideElements(signUpScreen, homeScreen, allCampgroundScreen, message)
+    removeAllChildren(campgroundInfo)
     showElements(loginScreen)
     addActive(loginLink)
     removeActive(signUpLink)
@@ -106,8 +223,9 @@ loginLink.addEventListener('click', () => {
 
 logoutLink.addEventListener('click', () => {
     localStorage.removeItem('userId')
-    hideElements(logoutLink, allCampgroundScreen)
-    showElements(signUpLink, loginLink, homeScreen, message)
+    hideElements(logoutLink, allCampgroundScreen, navLinks, createCampgroundArea, campgroundInfo)
+    showElements(signUpLink, loginLink, homeScreen)
+    location.reload();
 })
 
 signUpForm.addEventListener('submit', async (event) => {
@@ -125,7 +243,7 @@ signUpForm.addEventListener('submit', async (event) => {
 
         const userId = user.data.user.id
         localStorage.setItem('userId', userId)
-        showElements(allCampgroundScreen, logoutLink)
+        showElements(allCampgroundScreen, logoutLink, showCampgroundArea)
         hideElements(signUpLink, loginLink, signUpScreen, message)
     } catch (error) {
         alert(error.message)
@@ -147,8 +265,8 @@ loginForm.addEventListener('submit', async (event) => {
 
         const userId = user.data.user.id
         localStorage.setItem('userId', userId)
-        showElements(allCampgroundScreen, logoutLink)
-        hideElements(signUpLink, loginLink, loginScreen)
+        showElements(allCampgroundScreen, logoutLink, showCampgroundArea)
+        hideElements(signUpLink, loginLink, loginScreen, message)
     } catch (error) {
         alert(error.message)
     }
@@ -178,8 +296,7 @@ createCampgroundForm.addEventListener('submit', async (event) => {
 
 createCampgroundBtn.addEventListener('click', () => {
     if (isLoggedIn()) {
-        // const userId = localStorage.getItem('userId')
-        hideElements(showCampgroundArea)
+        hideElements(showCampgroundArea, message)
         showElements(createCampgroundArea)
     }
     else {
