@@ -85,8 +85,9 @@ ul {
     height: 200px;
 }
 
-.createCampgroundBtn, .addCommentBtn {
-    width:200px
+.createCampgroundBtn, .addCommentBtn, .campgroundInfo button {
+    width:200px;
+    cursor: pointer;
 }
 
 .hide {
@@ -116,6 +117,10 @@ ul {
 .campgroundInfo img {
     min-width: 400px;
     min-height: 400px;
+}
+
+.campgroundInfo button {
+    margin-bottom: 20px;
 }
 
 .commentArea {

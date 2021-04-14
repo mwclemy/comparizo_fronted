@@ -105,7 +105,18 @@ const addCampground = (campground) => {
             const campgroundId = event.target.getAttribute('data-campground-id')
             const response = await axios.get(`${API_URL}/campgrounds/${campgroundId}/comments`)
             const comments = response.data.comments
-
+            const backBtn = document.createElement('button')
+            backBtn.innerText = 'Go back'
+            backBtn.addEventListener('click', (event) => {
+                // event.preventDefault()
+                hideElements(campgroundInfo)
+                removeAllChildren(campgroundInfo)
+                showElements(allCampgroundScreen)
+                // location.reload()
+            })
+            const campgroundImage = document.createElement('img')
+            campgroundImage.src = campground.imageUrl
+            campgroundImage.alt = campground.name
             const campgroundName = document.createElement('h2')
             campgroundName.innerText = campground.name
             const description = document.createElement('p')
@@ -167,8 +178,8 @@ const addCampground = (campground) => {
                 const newCommentDiv = createComment(comment)
                 commentArea.append(newCommentDiv)
             }
-
-            campgroundInfo.append(image)
+            campgroundInfo.append(backBtn)
+            campgroundInfo.append(campgroundImage)
             campgroundInfo.append(campgroundName)
             campgroundInfo.append(description)
             campgroundInfo.append(submittedBy)
